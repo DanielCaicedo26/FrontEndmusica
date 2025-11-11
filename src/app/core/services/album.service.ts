@@ -5,6 +5,7 @@ import { Album } from '@core/models';
 @Injectable({ providedIn: 'root' })
 export class AlbumService extends BaseApiService<Album> {
   constructor() {
-    super('album');
+    // backend endpoint for albums
+    super('Album');
   }
 }

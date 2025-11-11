@@ -1,5 +1,121 @@
 <div class="album-list">
-  <h2>Albums</h2>
-  <p>Lista de albums - placeholder</p>
-  <a routerLink="/albums/create">Crear album</a>
+  <div class="header-row">
+    <h2>Álbumes</h2>
+    <button class="btn-create" (click)="openModal()">+ Crear álbum</button>
+  </div>
+
+  <div *ngIf="isLoading()" class="loading">Cargando álbumes...</div>
+  <div *ngIf="errorMessage()" class="error">{{ errorMessage() }}</div>
+
+  <div *ngIf="!isLoading() && albums().length === 0" class="empty">
+    No hay álbumes para mostrar.
+  </div>
+
+  <div class="grid" *ngIf="albums().length > 0">
+    <div class="card" *ngFor="let album of albums()">
+      <div class="cover">
+        <img [src]="album.coverImageUrl || 'assets/default-album.png'" alt="{{ album.name }}" />
+      </div>
+      <div class="info">
+        <h3>{{ album.name }}</h3>
+        <p class="artist">{{ album.artistName || ('Artista: ' + album.artistId) }}</p>
+        <p class="date" *ngIf="album.releaseDate">{{ album.releaseDate | date:'mediumDate' }}</p>
+        <p class="desc" *ngIf="album.description">{{ album.description }}</p>
+        <div class="actions">
+          <button class="btn-edit" (click)="openEditModal(album)">Editar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para crear/editar álbum -->
+<div class="modal-overlay" *ngIf="showModal()" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditMode() ? 'Editar Álbum' : 'Crear Nuevo Álbum' }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+
+    <form [formGroup]="albumForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Nombre *</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          [class.error]="albumForm.get('name')?.invalid && albumForm.get('name')?.touched"
+        />
+        <span class="error-msg" *ngIf="albumForm.get('name')?.invalid && albumForm.get('name')?.touched">
+          El nombre es requerido
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Descripción *</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="3"
+          [class.error]="albumForm.get('description')?.invalid && albumForm.get('description')?.touched"
+        ></textarea>
+        <span class="error-msg" *ngIf="albumForm.get('description')?.invalid && albumForm.get('description')?.touched">
+          La descripción es requerida
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="releaseDate">Fecha de Lanzamiento *</label>
+        <input
+          type="date"
+          id="releaseDate"
+          formControlName="releaseDate"
+          [class.error]="albumForm.get('releaseDate')?.invalid && albumForm.get('releaseDate')?.touched"
+        />
+        <span class="error-msg" *ngIf="albumForm.get('releaseDate')?.invalid && albumForm.get('releaseDate')?.touched">
+          La fecha de lanzamiento es requerida
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="coverImageUrl">URL de la Portada *</label>
+        <input
+          type="text"
+          id="coverImageUrl"
+          formControlName="coverImageUrl"
+          placeholder="https://ejemplo.com/imagen.jpg"
+          [class.error]="albumForm.get('coverImageUrl')?.invalid && albumForm.get('coverImageUrl')?.touched"
+        />
+        <span class="error-msg" *ngIf="albumForm.get('coverImageUrl')?.invalid && albumForm.get('coverImageUrl')?.touched">
+          La URL de la portada es requerida
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="artistId">Artista *</label>
+        <select
+          id="artistId"
+          formControlName="artistId"
+          [class.error]="albumForm.get('artistId')?.invalid && albumForm.get('artistId')?.touched"
+        >
+          <option [value]="null" disabled>Selecciona un artista</option>
+          <option *ngFor="let artist of artists()" [value]="artist.id">
+            {{ artist.name }}
+          </option>
+        </select>
+        <span class="error-msg" *ngIf="albumForm.get('artistId')?.invalid && albumForm.get('artistId')?.touched">
+          Debes seleccionar un artista
+        </span>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="closeModal()" [disabled]="isSaving()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-submit" [disabled]="isSaving()">
+          {{ isSaving() ? 'Guardando...' : 'Crear Álbum' }}
+        </button>
+      </div>
+    </form>
+  </div>
 </div>

@@ -1,17 +1,41 @@
 <div class="album-form">
-  <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Album</h2>
+  <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Álbum</h2>
   <form [formGroup]="albumForm" (ngSubmit)="onSubmit()">
-    <label>
-      Título
-      <input formControlName="title" />
-    </label>
-    <div>
-      <label>
-        Descripción
-        <textarea formControlName="description"></textarea>
-      </label>
+    <div class="form-group">
+      <label for="name">Nombre</label>
+      <input id="name" formControlName="name" />
+      <!-- Aquí puedes agregar mensajes de error si lo deseas -->
     </div>
-    <button type="submit">Guardar</button>
-    <a routerLink="/albums">Cancelar</a>
+
+    <div class="form-group">
+      <label for="description">Descripción</label>
+      <textarea id="description" formControlName="description"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="releaseDate">Fecha de Lanzamiento</label>
+      <input id="releaseDate" type="date" formControlName="releaseDate" />
+    </div>
+
+    <div class="form-group">
+      <label for="coverImageUrl">URL de la Portada</label>
+      <input id="coverImageUrl" formControlName="coverImageUrl" />
+    </div>
+
+    <div class="form-group">
+      <label for="artistId">Artista</label>
+      <select id="artistId" formControlName="artistId">
+        <option [ngValue]="null" disabled>Selecciona un artista</option>
+        <option *ngFor="let artist of artists" [ngValue]="artist.id">
+          {{ artist.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="albumForm.invalid">Guardar</button>
+      <a routerLink="/albums" class="cancel-button">Cancelar</a>
+    </div>
   </form>
 </div>
+

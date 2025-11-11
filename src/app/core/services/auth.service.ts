@@ -10,7 +10,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   // Backend API uses /api/v1/Auth as the base path
-  private baseUrl = `${environment.apiUrl}/api/v1/Auth`;
+  private baseUrl = `${environment.apiUrl}/v1/Auth`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
