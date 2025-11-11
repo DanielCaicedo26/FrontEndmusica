@@ -1,11 +1,26 @@
-<div class="genre-form">
-  <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Género</h2>
-  <form [formGroup]="genreForm" (ngSubmit)="onSubmit()">
-    <label>
-      Nombre
-      <input formControlName="name" />
-    </label>
-    <button type="submit">Guardar</button>
-    <a routerLink="/genres">Cancelar</a>
-  </form>
+<div class="container py-4">
+  <div class="form-card card">
+    <h1>{{ isEditMode() ? 'Edit Genre' : 'Create Genre' }}</h1>
+
+    <form [formGroup]="genreForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name" class="form-label">Name *</label>
+        <input type="text" id="name" formControlName="name" class="form-input" placeholder="Genre name"/>
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">Description *</label>
+        <textarea id="description" formControlName="description" class="form-input" rows="4"
+                  placeholder="Genre description"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
+          @if (isLoading()) { <span class="loading"></span> Saving... }
+          @else { {{ isEditMode() ? 'Update' : 'Create' }} }
+        </button>
+        <a routerLink="/genres" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
 </div>

@@ -1,5 +1,36 @@
-<div class="genre-list">
-  <h2>Géneros</h2>
-  <p>Lista de géneros - placeholder</p>
-  <a routerLink="/genres/create">Crear género</a>
+<div class="container py-4">
+  <div class="page-header">
+    <h1>Genres</h1>
+    <a routerLink="/genres/create" class="btn btn-primary">+ Create Genre</a>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <span class="loading"></span> Loading...
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-banner">{{ errorMessage() }}</div>
+  } @else if (genres().length === 0) {
+    <div class="empty-state card">
+      <p>No genres found</p>
+      <a routerLink="/genres/create" class="btn btn-primary">Create your first genre</a>
+    </div>
+  } @else {
+    <div class="genre-grid">
+      @for (genre of genres(); track genre.id) {
+        <div class="genre-card card">
+          <h3>{{ genre.name }}</h3>
+          <p class="description">{{ genre.description }}</p>
+          <div class="card-actions">
+            <a [routerLink]="['/genres/edit', genre.id]" class="btn btn-secondary">Edit</a>
+            <button (click)="deleteGenre(genre.id)" class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="mt-4">
+    <a routerLink="/dashboard" class="btn btn-secondary">← Back</a>
+  </div>
 </div>

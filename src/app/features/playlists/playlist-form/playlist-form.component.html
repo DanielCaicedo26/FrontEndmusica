@@ -1,11 +1,34 @@
-<div class="playlist-form">
-  <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Playlist</h2>
-  <form [formGroup]="playlistForm" (ngSubmit)="onSubmit()">
-    <label>
-      Nombre
-      <input formControlName="name" />
-    </label>
-    <button type="submit">Guardar</button>
-    <a routerLink="/playlists">Cancelar</a>
-  </form>
+<div class="container py-4">
+  <div class="form-card card">
+    <h1>{{ isEditMode() ? 'Edit Playlist' : 'Create Playlist' }}</h1>
+
+    <form [formGroup]="playlistForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name" class="form-label">Name *</label>
+        <input type="text" id="name" formControlName="name" class="form-input" placeholder="Playlist name"/>
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">Description *</label>
+        <textarea id="description" formControlName="description" class="form-input" rows="4"
+                  placeholder="Playlist description"></textarea>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="isPublic" formControlName="isPublic" class="form-checkbox"/>
+          <span>Make this playlist public</span>
+        </label>
+        <p class="helper-text">Public playlists can be viewed by anyone</p>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
+          @if (isLoading()) { <span class="loading"></span> Saving... }
+          @else { {{ isEditMode() ? 'Update' : 'Create' }} }
+        </button>
+        <a routerLink="/playlists" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
 </div>

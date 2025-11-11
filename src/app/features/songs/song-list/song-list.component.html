@@ -1,5 +1,46 @@
-<div class="song-list">
-  <h2>Canciones</h2>
-  <p>Lista de canciones - placeholder</p>
-  <a routerLink="/songs/create">Crear canción</a>
+<div class="container py-4">
+  <div class="page-header">
+    <h1>Songs</h1>
+    <a routerLink="/songs/create" class="btn btn-primary">+ Create Song</a>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <span class="loading"></span> Loading...
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-banner">{{ errorMessage() }}</div>
+  } @else if (songs().length === 0) {
+    <div class="empty-state card">
+      <p>No songs found</p>
+      <a routerLink="/songs/create" class="btn btn-primary">Create your first song</a>
+    </div>
+  } @else {
+    <div class="song-grid">
+      @for (song of songs(); track song.id) {
+        <div class="song-card card">
+          <h3>{{ song.name }}</h3>
+          <p class="description">{{ song.description }}</p>
+          <p class="duration">🎵 {{ formatDuration(song.durationSeconds) }}</p>
+          @if (song.albumName) {
+            <p class="album">Album: {{ song.albumName }}</p>
+          }
+          @if (song.genreName) {
+            <p class="genre">Genre: {{ song.genreName }}</p>
+          }
+          @if (song.audioUrl) {
+            <p class="audio-url">🎧 {{ song.audioUrl }}</p>
+          }
+          <div class="card-actions">
+            <a [routerLink]="['/songs/edit', song.id]" class="btn btn-secondary">Edit</a>
+            <button (click)="deleteSong(song.id)" class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="mt-4">
+    <a routerLink="/dashboard" class="btn btn-secondary">← Back</a>
+  </div>
 </div>

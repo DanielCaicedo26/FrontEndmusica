@@ -1,5 +1,44 @@
-<div class="playlist-list">
-  <h2>Playlists</h2>
-  <p>Lista de playlists - placeholder</p>
-  <a routerLink="/playlists/create">Crear playlist</a>
+<div class="container py-4">
+  <div class="page-header">
+    <h1>Playlists</h1>
+    <a routerLink="/playlists/create" class="btn btn-primary">+ Create Playlist</a>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <span class="loading"></span> Loading...
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-banner">{{ errorMessage() }}</div>
+  } @else if (playlists().length === 0) {
+    <div class="empty-state card">
+      <p>No playlists found</p>
+      <a routerLink="/playlists/create" class="btn btn-primary">Create your first playlist</a>
+    </div>
+  } @else {
+    <div class="playlist-grid">
+      @for (playlist of playlists(); track playlist.id) {
+        <div class="playlist-card card">
+          <div class="playlist-header">
+            <h3>{{ playlist.name }}</h3>
+            <span class="visibility-badge" [class.public]="playlist.isPublic">
+              {{ playlist.isPublic ? '🌐 Public' : '🔒 Private' }}
+            </span>
+          </div>
+          <p class="description">{{ playlist.description }}</p>
+          @if (playlist.userName) {
+            <p class="user">Created by: {{ playlist.userName }}</p>
+          }
+          <div class="card-actions">
+            <a [routerLink]="['/playlists/edit', playlist.id]" class="btn btn-secondary">Edit</a>
+            <button (click)="deletePlaylist(playlist.id)" class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="mt-4">
+    <a routerLink="/dashboard" class="btn btn-secondary">← Back</a>
+  </div>
 </div>
