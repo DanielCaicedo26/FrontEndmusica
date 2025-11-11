@@ -52,9 +52,25 @@ export class AuthService {
     return this.getCurrentUser()?.roles.includes(role) ?? false;
   }
 
+  getUserFullName(): string {
+    const firstName = localStorage.getItem('user_firstName') || '';
+    const lastName = localStorage.getItem('user_lastName') || '';
+    return `${firstName} ${lastName}`.trim();
+  }
+
   private handleAuthResponse(response: AuthResponse): void {
-    if (response.token) localStorage.setItem('auth_token', response.token);
-    if (response.refreshToken) localStorage.setItem('refresh_token', response.refreshToken);
+    if (response.token) {
+      localStorage.setItem('auth_token', response.token);
+    }
+    if (response.refreshToken) {
+      localStorage.setItem('refresh_token', response.refreshToken);
+    }
+    if (response.firstName) {
+      localStorage.setItem('user_firstName', response.firstName);
+    }
+    if (response.lastName) {
+      localStorage.setItem('user_lastName', response.lastName);
+    }
     if (response.user) {
       localStorage.setItem('user_data', JSON.stringify(response.user));
       this.currentUserSubject.next(response.user);

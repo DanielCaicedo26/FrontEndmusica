@@ -22,6 +22,10 @@ export class DashboardComponent {
     { title: 'Playlists', route: '/playlists', icon: '📱' }
   ];
 
+  get userFullName(): string {
+    return this.authService.getUserFullName();
+  }
+
   logout(): void {
     this.authService.logout();
   }

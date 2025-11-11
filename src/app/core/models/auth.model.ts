@@ -16,8 +16,10 @@ export interface RegisterRequest {
 
 export interface AuthResponse {
   token: string;
-  refreshToken: string;
-  user: User;
+  firstName?: string;
+  lastName?: string;
+  refreshToken?: string;
+  user?: User;
 }
 
 export interface User {

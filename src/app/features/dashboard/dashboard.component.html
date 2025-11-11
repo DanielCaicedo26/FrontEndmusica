@@ -3,10 +3,10 @@
     <div class="container navbar-content">
       <h1 class="logo">🎵 Music App</h1>
       <div class="user-menu">
-        @if (currentUser$ | async; as user) {
-          <span class="user-name">{{ user.username }}</span>
-          <button class="btn btn-secondary" (click)="logout()">Logout</button>
+        @if (userFullName) {
+          <span class="user-name">{{ userFullName }}</span>
         }
+        <button class="btn btn-secondary" (click)="logout()">Logout</button>
       </div>
     </div>
   </nav>
