@@ -1,0 +1,17 @@
+<div class="album-form">
+  <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Album</h2>
+  <form [formGroup]="albumForm" (ngSubmit)="onSubmit()">
+    <label>
+      Título
+      <input formControlName="title" />
+    </label>
+    <div>
+      <label>
+        Descripción
+        <textarea formControlName="description"></textarea>
+      </label>
+    </div>
+    <button type="submit">Guardar</button>
+    <a routerLink="/albums">Cancelar</a>
+  </form>
+</div>

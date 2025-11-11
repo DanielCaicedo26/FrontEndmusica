@@ -1,0 +1,40 @@
+<div class="container py-4">
+  <div class="page-header">
+    <h1>Artists</h1>
+    <a routerLink="/artists/create" class="btn btn-primary">+ Create Artist</a>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <span class="loading"></span> Loading...
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-banner">{{ errorMessage() }}</div>
+  } @else if (artists().length === 0) {
+    <div class="empty-state card">
+      <p>No artists found</p>
+      <a routerLink="/artists/create" class="btn btn-primary">Create your first artist</a>
+    </div>
+  } @else {
+    <div class="artist-grid">
+      @for (artist of artists(); track artist.id) {
+        <div class="artist-card card">
+          <h3>{{ artist.name }}</h3>
+          <p class="country">🌍 {{ artist.country }}</p>
+          @if (artist.debutDate) {
+            <p class="debut">Debut: {{ artist.debutDate | date:'yyyy' }}</p>
+          }
+          <p class="description">{{ artist.description }}</p>
+          <div class="card-actions">
+            <a [routerLink]="['/artists/edit', artist.id]" class="btn btn-secondary">Edit</a>
+            <button (click)="deleteArtist(artist.id)" class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="mt-4">
+    <a routerLink="/dashboard" class="btn btn-secondary">← Back</a>
+  </div>
+</div>

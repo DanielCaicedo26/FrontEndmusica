@@ -1,0 +1,43 @@
+<div class="auth-container">
+  <div class="auth-card card">
+    <h1 class="text-center mb-4">🎵 Login</h1>
+
+    @if (errorMessage()) {
+      <div class="error-banner mb-3">{{ errorMessage() }}</div>
+    }
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" formControlName="email" class="form-input"
+               [class.error]="email?.invalid && email?.touched" placeholder="Enter your email"/>
+        @if (email?.invalid && email?.touched) {
+          <div class="error-message">
+            @if (email?.errors?.['required']) { Email is required }
+            @if (email?.errors?.['email']) { Invalid email }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" formControlName="password" class="form-input"
+               [class.error]="password?.invalid && password?.touched" placeholder="Enter password"/>
+        @if (password?.invalid && password?.touched) {
+          <div class="error-message">
+            @if (password?.errors?.['required']) { Password is required }
+            @if (password?.errors?.['minlength']) { Min 6 characters }
+          </div>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary w-full" [disabled]="isLoading()">
+        @if (isLoading()) { <span class="loading"></span> Logging in... } @else { Login }
+      </button>
+    </form>
+
+    <p class="text-center mt-3">
+      Don't have an account? <a routerLink="/auth/register">Register</a>
+    </p>
+  </div>
+</div>

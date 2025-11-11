@@ -1,0 +1,60 @@
+<div class="auth-container">
+  <div class="auth-card card">
+    <h1 class="text-center mb-4">🎵 Register</h1>
+
+    @if (errorMessage()) {
+      <div class="error-banner mb-3">{{ errorMessage() }}</div>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" formControlName="firstName" class="form-input"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" formControlName="lastName" class="form-input"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" formControlName="email" class="form-input"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" formControlName="password" class="form-input"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input type="password" formControlName="confirmPassword" class="form-input"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Identification</label>
+        <input type="text" formControlName="identification" class="form-input"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" formControlName="phoneNumber" class="form-input"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Address</label>
+        <input type="text" formControlName="address" class="form-input"/>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-full" [disabled]="isLoading()">
+        @if (isLoading()) { <span class="loading"></span> Registering... } @else { Register }
+      </button>
+    </form>
+
+    <p class="text-center mt-3">
+      Already have an account? <a routerLink="/auth/login">Login</a>
+    </p>
+  </div>
+</div>

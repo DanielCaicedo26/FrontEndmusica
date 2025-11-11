@@ -1,0 +1,11 @@
+<div class="genre-form">
+  <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Género</h2>
+  <form [formGroup]="genreForm" (ngSubmit)="onSubmit()">
+    <label>
+      Nombre
+      <input formControlName="name" />
+    </label>
+    <button type="submit">Guardar</button>
+    <a routerLink="/genres">Cancelar</a>
+  </form>
+</div>

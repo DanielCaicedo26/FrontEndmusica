@@ -1,0 +1,15 @@
+<div class="song-form">
+  <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Canción</h2>
+  <form [formGroup]="songForm" (ngSubmit)="onSubmit()">
+    <label>
+      Título
+      <input formControlName="title" />
+    </label>
+    <label>
+      Duración
+      <input formControlName="duration" />
+    </label>
+    <button type="submit">Guardar</button>
+    <a routerLink="/songs">Cancelar</a>
+  </form>
+</div>

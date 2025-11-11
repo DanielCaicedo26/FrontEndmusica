@@ -1,0 +1,29 @@
+<div class="dashboard">
+  <nav class="navbar">
+    <div class="container navbar-content">
+      <h1 class="logo">🎵 Music App</h1>
+      <div class="user-menu">
+        @if (currentUser$ | async; as user) {
+          <span class="user-name">{{ user.username }}</span>
+          <button class="btn btn-secondary" (click)="logout()">Logout</button>
+        }
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="dashboard-content">
+      <h2 class="dashboard-title">Welcome to Music Security App</h2>
+      <p class="dashboard-subtitle">Manage your music content</p>
+
+      <div class="menu-grid">
+        @for (item of menuItems; track item.route) {
+          <a [routerLink]="item.route" class="menu-card card">
+            <div class="menu-icon">{{ item.icon }}</div>
+            <h3 class="menu-title">{{ item.title }}</h3>
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+</div>

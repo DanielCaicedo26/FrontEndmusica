@@ -1,0 +1,11 @@
+<div class="playlist-form">
+  <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Playlist</h2>
+  <form [formGroup]="playlistForm" (ngSubmit)="onSubmit()">
+    <label>
+      Nombre
+      <input formControlName="name" />
+    </label>
+    <button type="submit">Guardar</button>
+    <a routerLink="/playlists">Cancelar</a>
+  </form>
+</div>
