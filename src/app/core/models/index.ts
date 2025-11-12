@@ -12,3 +12,4 @@ export * from './album.model';
 export * from './song.model';
 export * from './genre.model';
 export * from './playlist.model';
+export * from './playlist-song.model';

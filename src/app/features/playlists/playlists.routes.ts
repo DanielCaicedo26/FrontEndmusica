@@ -12,7 +12,9 @@ export const PLAYLISTS_ROUTES: Routes = [
   {
     path: 'edit/:id',
     loadComponent: () => import('./playlist-form/playlist-form.component').then(m => m.PlaylistFormComponent)
+  },
+  {
+    path: ':id/songs',
+    loadComponent: () => import('./playlist-songs/playlist-songs.component').then(m => m.PlaylistSongsComponent)
   }
 ];
-
-// NOTE: Copia los archivos de artists y reemplaza "Artist" por "Playlist"

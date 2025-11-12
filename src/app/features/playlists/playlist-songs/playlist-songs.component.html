@@ -1,0 +1,171 @@
+<div class="container py-4">
+  <div class="page-header-with-back">
+    <div class="back-navigation">
+      <a routerLink="/playlists" class="btn-back">Volver a playlists</a>
+    </div>
+    <div class="header-content">
+      <h1>{{ playlist()?.name || 'Playlist' }}</h1>
+      <button class="btn-create" (click)="openAddModal()">Agregar canción</button>
+    </div>
+  </div>
+
+  @if (successMessage()) {
+    <div class="alert alert-success">
+      ✓ {{ successMessage() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger">
+      ⚠️ {{ errorMessage() }}
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <span class="loading"></span> Cargando canciones...
+    </div>
+  } @else if (playlistSongs().length === 0) {
+    <div class="empty-state card">
+      <span class="empty-icon">🎵</span>
+      <h3>No hay canciones en esta playlist</h3>
+      <p>Comienza agregando canciones a tu playlist</p>
+      <button class="btn btn-primary" (click)="openAddModal()">Agregar canción</button>
+    </div>
+  } @else {
+    <div class="table-container card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Canción</th>
+            <th>Álbum</th>
+            <th>Género</th>
+            <th>Duración</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (playlistSong of playlistSongs(); track playlistSong.id) {
+            <tr>
+              <td>{{ playlistSong.orderIndex + 1 }}</td>
+              <td>
+                <div class="song-info">
+                  <span class="song-icon">🎵</span>
+                  <strong>{{ getSongTitle(playlistSong) }}</strong>
+                </div>
+              </td>
+              <td>{{ getSongAlbumName(playlistSong) }}</td>
+              <td>{{ playlistSong.song?.genreName || '-' }}</td>
+              <td>{{ getSongDuration(playlistSong) }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button
+                    (click)="openDeleteModal(playlistSong)"
+                    class="btn-action btn-action-delete"
+                    title="Eliminar"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Add Song Modal -->
+@if (showAddModal()) {
+  <div class="modal-overlay" (click)="closeAddModal()">
+    <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Agregar Canción a Playlist</h3>
+        <button class="modal-close" (click)="closeAddModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addSongForm" (ngSubmit)="onAddSong()">
+          <div class="form-group">
+            <label class="form-label" for="songId">Selecciona una canción *</label>
+            @if (isLoadingSongs()) {
+              <div class="loading-select">
+                <span class="loading"></span> Cargando canciones...
+              </div>
+            } @else {
+              <select
+                id="songId"
+                formControlName="songId"
+                class="form-input"
+                [class.error]="addSongForm.get('songId')?.invalid && addSongForm.get('songId')?.touched"
+              >
+                <option [value]="null">Selecciona una canción</option>
+                @for (song of availableSongs(); track song.id) {
+                  <option [value]="song.id">
+                    {{ song.name }} - {{ song.albumName || 'Sin álbum' }}
+                  </option>
+                }
+              </select>
+              @if (addSongForm.get('songId')?.invalid && addSongForm.get('songId')?.touched) {
+                <span class="error-message">Debes seleccionar una canción</span>
+              }
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="orderIndex">Posición en la playlist *</label>
+            <input
+              type="number"
+              id="orderIndex"
+              formControlName="orderIndex"
+              class="form-input"
+              [class.error]="addSongForm.get('orderIndex')?.invalid && addSongForm.get('orderIndex')?.touched"
+              min="0"
+            />
+            @if (addSongForm.get('orderIndex')?.invalid && addSongForm.get('orderIndex')?.touched) {
+              <span class="error-message">
+                @if (addSongForm.get('orderIndex')?.errors?.['required']) {
+                  La posición es requerida
+                } @else if (addSongForm.get('orderIndex')?.errors?.['min']) {
+                  Debe ser un número mayor o igual a 0
+                }
+              </span>
+            }
+            <p class="help-text">0 es la primera posición</p>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeAddModal()">Cancelar</button>
+        <button class="btn btn-primary" (click)="onAddSong()" [disabled]="isSaving() || addSongForm.invalid">
+          @if (isSaving()) {
+            <span class="loading"></span> Agregando...
+          } @else {
+            Agregar Canción
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteModal()) {
+  <div class="modal-overlay" (click)="closeDeleteModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Confirmar eliminación</h3>
+        <button class="modal-close" (click)="closeDeleteModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que deseas eliminar <strong>{{ getSongTitle(selectedPlaylistSong()!) }}</strong> de esta playlist?</p>
+        <p class="warning-text">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeDeleteModal()">Cancelar</button>
+        <button class="btn btn-danger" (click)="confirmDelete()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+}

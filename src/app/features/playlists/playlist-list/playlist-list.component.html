@@ -35,8 +35,9 @@
             <p class="user">Created by: {{ playlist.userName }}</p>
           }
           <div class="card-actions">
-            <a [routerLink]="['/playlists/edit', playlist.id]" class="btn btn-secondary">Edit</a>
-            <button (click)="deletePlaylist(playlist.id)" class="btn btn-danger">Delete</button>
+            <a [routerLink]="['/playlists', playlist.id, 'songs']" class="btn btn-primary">🎵 Canciones</a>
+            <a [routerLink]="['/playlists/edit', playlist.id]" class="btn btn-secondary">Editar</a>
+            <button (click)="deletePlaylist(playlist.id)" class="btn btn-danger">Eliminar</button>
           </div>
         </div>
       }
