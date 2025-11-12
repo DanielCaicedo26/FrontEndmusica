@@ -1,0 +1,105 @@
+<div class="container py-4">
+  <div class="page-header-with-back">
+    <div class="back-navigation">
+      <a routerLink="/dashboard" class="btn-back">Volver al inicio</a>
+    </div>
+    <div class="header-content">
+      <h1>Personas</h1>
+      <a routerLink="/persons/new" class="btn-create">Crear persona</a>
+    </div>
+  </div>
+
+  @if (successMessage()) {
+    <div class="alert alert-success">
+      ✓ {{ successMessage() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger">
+      ⚠️ {{ errorMessage() }}
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <span class="loading"></span> Cargando personas...
+    </div>
+  } @else if (persons().length === 0) {
+    <div class="empty-state card">
+      <span class="empty-icon">👨‍👩‍👧‍👦</span>
+      <h3>No hay personas registradas</h3>
+      <p>Comienza creando tu primera persona</p>
+      <a routerLink="/persons/new" class="btn btn-primary">Crear persona</a>
+    </div>
+  } @else {
+    <div class="table-container card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre Completo</th>
+            <th>Documento</th>
+            <th>Teléfono</th>
+            <th>Dirección</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (person of persons(); track person.id) {
+            <tr>
+              <td>{{ person.id }}</td>
+              <td>
+                <div class="person-info">
+                  <span class="person-avatar">👤</span>
+                  <strong>{{ getFullName(person) }}</strong>
+                </div>
+              </td>
+              <td>
+                <span class="document-number">🆔 {{ person.identification }}</span>
+              </td>
+              <td>
+                <span class="phone-number">📱 {{ person.phoneNumber }}</span>
+              </td>
+              <td>{{ person.address }}</td>
+              <td>
+                <div class="action-buttons">
+                  <a [routerLink]="['/persons/edit', person.id]" class="btn-action btn-action-edit" title="Editar">
+                    ✏️
+                  </a>
+                  <button
+                    (click)="openDeleteModal(person)"
+                    class="btn-action btn-action-delete"
+                    title="Eliminar"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteModal()) {
+  <div class="modal-overlay" (click)="closeDeleteModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Confirmar eliminación</h3>
+        <button class="modal-close" (click)="closeDeleteModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que deseas eliminar a <strong>{{ getFullName(selectedPerson()!) }}</strong>?</p>
+        <p class="warning-text">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeDeleteModal()">Cancelar</button>
+        <button class="btn btn-danger" (click)="confirmDelete()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+}

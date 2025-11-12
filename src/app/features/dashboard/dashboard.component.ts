@@ -19,7 +19,9 @@ export class DashboardComponent {
     { title: 'Albums', route: '/albums', icon: '💿' },
     { title: 'Songs', route: '/songs', icon: '🎵' },
     { title: 'Genres', route: '/genres', icon: '🎸' },
-    { title: 'Playlists', route: '/playlists', icon: '📱' }
+    { title: 'Playlists', route: '/playlists', icon: '📱' },
+    { title: 'Personas', route: '/persons', icon: '👨‍👩‍👧‍👦' },
+    { title: 'Usuarios', route: '/users', icon: '👥' }
   ];
 
   get userFullName(): string {

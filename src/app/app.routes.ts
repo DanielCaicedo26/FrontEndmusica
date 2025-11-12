@@ -39,5 +39,15 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () => import('./features/playlists/playlists.routes').then(m => m.PLAYLISTS_ROUTES)
   },
+  {
+    path: 'users',
+    canActivate: [authGuard],
+    loadChildren: () => import('./features/users/users.routes').then(m => m.USERS_ROUTES)
+  },
+  {
+    path: 'persons',
+    canActivate: [authGuard],
+    loadChildren: () => import('./features/persons/persons.routes').then(m => m.PERSONS_ROUTES)
+  },
   { path: '**', redirectTo: 'dashboard' }
 ];

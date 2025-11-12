@@ -1,0 +1,126 @@
+<div class="container py-4">
+  <div class="page-header-with-back">
+    <div class="back-navigation">
+      <a routerLink="/dashboard" class="btn-back">Volver al inicio</a>
+    </div>
+    <div class="header-content">
+      <h1>Usuarios</h1>
+      <a routerLink="/users/new" class="btn-create">Crear usuario</a>
+    </div>
+  </div>
+
+  @if (successMessage()) {
+    <div class="alert alert-success">
+      ✓ {{ successMessage() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger">
+      ⚠️ {{ errorMessage() }}
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <span class="loading"></span> Cargando usuarios...
+    </div>
+  } @else if (users().length === 0) {
+    <div class="empty-state card">
+      <span class="empty-icon">👥</span>
+      <h3>No hay usuarios registrados</h3>
+      <p>Comienza creando tu primer usuario</p>
+      <a routerLink="/users/new" class="btn btn-primary">Crear usuario</a>
+    </div>
+  } @else {
+    <div class="table-container card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre de Usuario</th>
+            <th>Email</th>
+            <th>Persona Asociada</th>
+            <th>Teléfono</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user.id) {
+            <tr>
+              <td>{{ user.id }}</td>
+              <td>
+                <div class="user-info">
+                  <span class="user-avatar">👤</span>
+                  <strong>{{ user.name }}</strong>
+                </div>
+              </td>
+              <td>{{ user.email }}</td>
+              <td>
+                @if (user.person) {
+                  {{ user.person.firstName }} {{ user.person.lastName }}
+                } @else {
+                  <span class="text-muted">ID: {{ user.personId }}</span>
+                }
+              </td>
+              <td>
+                @if (user.person) {
+                  {{ user.person.phoneNumber }}
+                } @else {
+                  <span class="text-muted">-</span>
+                }
+              </td>
+              <td>
+                <span [class]="user.isActive !== false ? 'badge badge-success' : 'badge badge-danger'">
+                  {{ user.isActive !== false ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <a [routerLink]="['/users/edit', user.id]" class="btn-action btn-action-edit" title="Editar">
+                    ✏️
+                  </a>
+                  <button
+                    (click)="toggleUserStatus(user)"
+                    class="btn-action btn-action-toggle"
+                    [title]="user.isActive !== false ? 'Desactivar' : 'Activar'"
+                  >
+                    {{ user.isActive !== false ? '🔒' : '🔓' }}
+                  </button>
+                  <button
+                    (click)="openDeleteModal(user)"
+                    class="btn-action btn-action-delete"
+                    title="Eliminar"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteModal()) {
+  <div class="modal-overlay" (click)="closeDeleteModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Confirmar eliminación</h3>
+        <button class="modal-close" (click)="closeDeleteModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que deseas eliminar al usuario <strong>{{ selectedUser()?.name }}</strong>?</p>
+        <p class="warning-text">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeDeleteModal()">Cancelar</button>
+        <button class="btn btn-danger" (click)="confirmDelete()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+}

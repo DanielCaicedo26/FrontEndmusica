@@ -1,0 +1,161 @@
+<div class="container py-4">
+  <div class="page-header-with-back">
+    <div class="back-navigation">
+      <a routerLink="/users" class="btn-back">Volver a usuarios</a>
+    </div>
+    <div class="header-content">
+      <h1>{{ isEditMode() ? 'Editar Usuario' : 'Crear Usuario' }}</h1>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger">
+      ⚠️ {{ errorMessage() }}
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <span class="loading"></span> Cargando datos...
+    </div>
+  } @else {
+    <div class="form-card card">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <div class="form-section">
+          <h3 class="section-title">Información del Usuario</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="name">Nombre de Usuario *</label>
+              <input
+                type="text"
+                id="name"
+                formControlName="name"
+                class="form-input"
+                [class.error]="userForm.get('name')?.invalid && userForm.get('name')?.touched"
+                placeholder="Ej: johndoe"
+              />
+              @if (userForm.get('name')?.invalid && userForm.get('name')?.touched) {
+                <span class="error-message">
+                  @if (userForm.get('name')?.errors?.['required']) {
+                    El nombre de usuario es requerido
+                  } @else if (userForm.get('name')?.errors?.['minlength']) {
+                    Debe tener al menos 3 caracteres
+                  }
+                </span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="email">Email *</label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-input"
+                [class.error]="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+                placeholder="usuario@ejemplo.com"
+              />
+              @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
+                <span class="error-message">
+                  @if (userForm.get('email')?.errors?.['required']) {
+                    El email es requerido
+                  } @else if (userForm.get('email')?.errors?.['email']) {
+                    Ingresa un email válido
+                  }
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="personId">Persona *</label>
+            @if (isLoadingPersons()) {
+              <div class="loading-select">
+                <span class="loading"></span> Cargando personas...
+              </div>
+            } @else {
+              <select
+                id="personId"
+                formControlName="personId"
+                class="form-input"
+                [class.error]="userForm.get('personId')?.invalid && userForm.get('personId')?.touched"
+              >
+                <option [value]="null">Selecciona una persona</option>
+                @for (person of persons(); track person.id) {
+                  <option [value]="person.id">
+                    {{ getPersonFullName(person) }} - {{ person.phoneNumber }}
+                  </option>
+                }
+              </select>
+              @if (userForm.get('personId')?.invalid && userForm.get('personId')?.touched) {
+                <span class="error-message">Debes seleccionar una persona</span>
+              }
+            }
+            <p class="help-text">Selecciona la persona asociada a este usuario</p>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="section-title">
+            {{ isEditMode() ? 'Cambiar Contraseña (opcional)' : 'Contraseña *' }}
+          </h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="password">
+                {{ isEditMode() ? 'Nueva Contraseña' : 'Contraseña' }}
+                {{ !isEditMode() ? '*' : '' }}
+              </label>
+              <input
+                type="password"
+                id="password"
+                formControlName="password"
+                class="form-input"
+                [class.error]="userForm.get('password')?.invalid && userForm.get('password')?.touched"
+                placeholder="••••••••"
+              />
+              @if (userForm.get('password')?.invalid && userForm.get('password')?.touched) {
+                <span class="error-message">
+                  @if (userForm.get('password')?.errors?.['required']) {
+                    La contraseña es requerida
+                  } @else if (userForm.get('password')?.errors?.['minlength']) {
+                    Debe tener al menos 6 caracteres
+                  }
+                </span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="confirmPassword">
+                Confirmar Contraseña {{ !isEditMode() ? '*' : '' }}
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                formControlName="confirmPassword"
+                class="form-input"
+                [class.error]="userForm.get('confirmPassword')?.invalid && userForm.get('confirmPassword')?.touched"
+                placeholder="••••••••"
+              />
+              @if (userForm.get('confirmPassword')?.invalid && userForm.get('confirmPassword')?.touched) {
+                <span class="error-message">Confirma la contraseña</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a routerLink="/users" class="btn btn-secondary">Cancelar</a>
+          <button type="submit" class="btn btn-primary" [disabled]="isSaving() || userForm.invalid">
+            @if (isSaving()) {
+              <span class="loading"></span> Guardando...
+            } @else {
+              {{ isEditMode() ? 'Actualizar' : 'Crear' }} Usuario
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>
