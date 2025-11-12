@@ -1,7 +1,12 @@
 <div class="container py-4">
-  <div class="page-header">
-    <h1>Songs</h1>
-    <a routerLink="/songs/create" class="btn btn-primary">+ Create Song</a>
+  <div class="page-header-with-back">
+    <div class="back-navigation">
+      <a routerLink="/dashboard" class="btn-back">Volver al inicio</a>
+    </div>
+    <div class="header-content">
+      <h1>Songs</h1>
+      <a routerLink="/songs/create" class="btn btn-primary">Create Song</a>
+    </div>
   </div>
 
   @if (isLoading()) {
@@ -39,8 +44,4 @@
       }
     </div>
   }
-
-  <div class="mt-4">
-    <a routerLink="/dashboard" class="btn btn-secondary">← Back</a>
-  </div>
 </div>

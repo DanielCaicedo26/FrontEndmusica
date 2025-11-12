@@ -1,7 +1,12 @@
 <div class="album-list">
-  <div class="header-row">
-    <h2>Álbumes</h2>
-    <button class="btn-create" (click)="openModal()">+ Crear álbum</button>
+  <div class="page-header-with-back">
+    <div class="back-navigation">
+      <a routerLink="/dashboard" class="btn-back">Volver al inicio</a>
+    </div>
+    <div class="header-content">
+      <h1>Álbumes</h1>
+      <button class="btn-create" (click)="openModal()">Crear álbum</button>
+    </div>
   </div>
 
   <div *ngIf="isLoading()" class="loading">Cargando álbumes...</div>
